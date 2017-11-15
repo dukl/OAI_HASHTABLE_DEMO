@@ -367,15 +367,20 @@ obj_hashtable_is_key_exists (
   }
 
   hash = hashtblP->hashfunc (keyP, key_sizeP) % hashtblP->size;
+  printf("%d,%d\n",hashtblP->hashfunc(keyP,key_sizeP),hashtblP->size);
   node = hashtblP->nodes[hash];
-
+  printf("search node:%d\n",hash);
   while (node) {
     if (node->key == keyP) {
       PRINT_HASHTABLE (hashtblP, "%s(%s,key %p klen %u) hash %lx return OK\n", __FUNCTION__, bdata(hashtblP->name), keyP, key_sizeP, hash);
+	  printf("same address!!!\n");
+	 // printf("%d,%d\n",*(node->key++),*(node->key));
       return HASH_TABLE_OK;
     } else if (node->key_size == key_sizeP) {
       if (memcmp (node->key, keyP, key_sizeP) == 0) {
         PRINT_HASHTABLE (hashtblP, "%s(%s,key %p klen %u) hash %lx return OK\n", __FUNCTION__, bdata(hashtblP->name), keyP, key_sizeP, hash);
+		printf("different address,same keys\n");
+        printf("%s\n",node->data);
         return HASH_TABLE_OK;
       }
     }
@@ -529,11 +534,13 @@ obj_hashtable_insert (
 
   hash = hashtblP->hashfunc (keyP, key_sizeP) % hashtblP->size;
   node = hashtblP->nodes[hash];
+  printf("insert node:%d\n",hash);
 
   while (node) {
-    if (node->key == keyP) {
-      if (node->data) {
-        hashtblP->freedatafunc (&node->data);
+   // if (node->key == keyP) {
+	if(memcmp (node->key, keyP, key_sizeP) == 0){
+	  if (node->data) {
+       // hashtblP->freedatafunc (&node->data);
       }
 
       node->data = dataP;
@@ -546,6 +553,7 @@ obj_hashtable_insert (
 
     node = node->next;
   }
+printf("problem?\n");
 
   if (!(node = malloc (sizeof (obj_hash_node_t)))) {
     PRINT_HASHTABLE (hashtblP, "%s(%s,key %p) hash %lx return SYSTEM_ERROR\n", __FUNCTION__, bdata(hashtblP->name), keyP, hash);

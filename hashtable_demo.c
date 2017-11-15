@@ -1,11 +1,15 @@
 #include"obj_hashtable.h"
+#include"hashtable.h"
 #include<stdio.h>
 int main(){
     const hash_size_t sizeP=10;
-	int key_sizeP=1;
-	long key=208930000000001;
-	long *keyP=&key;
-	char *dataP="dukl";
+	int key_sizeP=2*sizeof(long);
+	long key[2]={208,98};
+	long *keyP=key;
+	char *dataP= (char *)malloc(sizeof(char));
+	char *data = "dukl";
+	dataP = data;
+	
 
 	obj_hash_table_t *hashtblp=obj_hashtable_create(sizeP,NULL,NULL,NULL,NULL);
 	if(hashtblp){
@@ -37,8 +41,12 @@ int main(){
 			printf("HASH_TABLE_KEY_NOT_EXISTS\n\n");break;
 	}
 
-	long key2=20893000141;
-	long *keyP2=&key2;
+	long key2[2]={208,98};
+	long *keyP2=key2;
+    char *dataP2="dukl test";
+
+
+    obj_hashtable_insert(hashtblp,keyP2,key_sizeP,dataP2);
     hashtable_rc_t isExist2 = obj_hashtable_is_key_exists(hashtblp,keyP2,key_sizeP);
 	switch(isExist2){
 		case HASH_TABLE_BAD_PARAMETER_HASHTABLE:
@@ -54,6 +62,16 @@ int main(){
 	char *dataRev[2];
 	obj_hashtable_get(hashtblp,keyP,key_sizeP,dataRev);
 	printf("%s\n\n",dataRev[0]);
+
+    obj_hash_node_t * node;
+	hash_size_t       hash;
+    hash = hashtblp->hashfunc(keyP,key_sizeP) % hashtblp->size;
+	node = hashtblp->nodes[hash];
+	while(node){
+	  printf("%s\n",node->data);
+	  node = node->next;
+	}
+
     return 0;
 }
 
