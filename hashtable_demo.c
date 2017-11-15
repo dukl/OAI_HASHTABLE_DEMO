@@ -6,9 +6,9 @@ int main(){
 	int key_sizeP=2*sizeof(long);
 	long key[2]={208,98};
 	long *keyP=key;
-	char *dataP= (char *)malloc(sizeof(char));
-	char *data = "dukl";
-	dataP = data;
+	//char *dataP= (char *)malloc(sizeof(char));
+	char *dataP = "dukl";
+	//dataP = data;
 	
 
 	obj_hash_table_t *hashtblp=obj_hashtable_create(sizeP,NULL,NULL,NULL,NULL);
